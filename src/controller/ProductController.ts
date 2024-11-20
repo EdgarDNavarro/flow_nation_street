@@ -1,7 +1,8 @@
 import type { NextFunction, Request, Response } from "express"
-import Category from "../db/models/Categories"
 import { respError, respOk } from "../utils/responses"
 import Product from "../db/models/Products"
+import ProductVariant from "../db/models/ProductVariant"
+import ProductImage from "../db/models/ProductImage"
 
 export class ProductController {
     static createProduct = async (req: Request, res: Response, next: NextFunction) => {
@@ -14,7 +15,26 @@ export class ProductController {
     }
 
     static getProductById = async (req: Request, res: Response, next: NextFunction) => {
-        res.json(respOk(req.product))
+        const { productId } = req.params
+
+        try {
+            const product = await Product.findByPk(productId, {
+                include: [{
+                    model: ProductVariant,
+                    include: [{ model: ProductImage }]
+                }]
+            })
+        
+            if(!product) {
+                const error = new Error("Product not found")
+                res.status(404).json(respError({message: error.message}))
+                return
+            }
+    
+            res.json(respOk(product))
+        } catch (error) {
+            next(error)
+        }
     }
 
     static getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
@@ -37,8 +57,8 @@ export class ProductController {
 
     static updateProduct = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { name, description, price, categoryId, stock, discount } = req.body
-            req.product.set({ name, description, price, categoryId, stock, discount })
+            const { name, description, status, categoryId, collection } = req.body
+            req.product.set({ name, description, categoryId, status, collection  })
             await req.product.save()
             res.send("Update success")
         } catch (error) {

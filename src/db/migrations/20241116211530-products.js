@@ -18,10 +18,13 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      price: {
-        type: Sequelize.FLOAT,
+      collection: {
+        type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: 0.0,
+      },
+      status: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       categoryId: {
         type: Sequelize.INTEGER,
@@ -32,20 +35,6 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
-      },
-      stock: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      discount: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      img: {
-        type: Sequelize.STRING,
-        allowNull: true,
       },
       createdAt: {
         type: Sequelize.DATE,

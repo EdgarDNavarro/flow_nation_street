@@ -20,11 +20,11 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      productId: {
+      productVariantId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'products',
+          model: 'product_variants', // Tabla relacionada
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -34,6 +34,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 1,
+      },
+      price: {
+        type: Sequelize.FLOAT,
+        allowNull: false
       },
       createdAt: {
         type: Sequelize.DATE,

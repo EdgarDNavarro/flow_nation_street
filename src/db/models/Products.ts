@@ -2,26 +2,29 @@ import { Model, DataTypes, ForeignKey } from "sequelize";
 import db from ".";
 import Category from "./Categories";
 
+export const productStatus = {
+  PUBLISHED: "published",
+  INACTIVE: "inactive",
+  SCHEDULED: "scheduled"
+} as const
+export type ProductStatus = typeof productStatus[keyof typeof productStatus]
+
 export interface IProduct {
   id: number;
   name: string;
   description: string | null;
-  price: number;
+  collection: string;
+  status: ProductStatus;
   categoryId: ForeignKey<number>;
-  stock: number;
-  discount: number;
-  img: string | null;
 }
 
 class Product extends Model<IProduct> implements IProduct {
   declare id: IProduct['id'];
   declare name: IProduct['name'];
   declare description: IProduct['description'];
-  declare price: IProduct['price'];
+  declare collection: IProduct['collection'];
+  declare status: IProduct['status'];
   declare categoryId: IProduct['categoryId'];
-  declare stock: IProduct['stock'];
-  declare discount: IProduct['discount'];
-  declare img: IProduct['img'];
 }
 
 Product.init(
@@ -40,10 +43,13 @@ Product.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    price: {
-      type: DataTypes.FLOAT,
+    collection: {
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 0.0,
+    },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     categoryId: {
       type: DataTypes.INTEGER,
@@ -52,20 +58,6 @@ Product.init(
         model: Category, 
         key: "id",
       },
-    },
-    stock: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0,
-    },
-    discount: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-      defaultValue: 0, 
-    },
-    img: {
-      type: DataTypes.STRING,
-      allowNull: true,
     }
   },
   {

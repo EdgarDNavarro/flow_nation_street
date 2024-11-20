@@ -2,12 +2,14 @@ import { Model, DataTypes, ForeignKey } from "sequelize";
 import db from ".";
 import Order from "./Orders";
 import Product from "./Products";
+import ProductVariant from "./ProductVariant";
 
 class OrderDetail extends Model {
   declare id: number;
   declare orderId: ForeignKey<number>;
-  declare productId: ForeignKey<number>;
+  declare productVariantId: ForeignKey<number>;
   declare quantity: number;
+  declare price: number
 }
 
 OrderDetail.init(
@@ -26,11 +28,11 @@ OrderDetail.init(
         key: "id",
       },
     },
-    productId: {
+    productVariantId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Product,
+        model: ProductVariant, // Debe coincidir con la tabla de productos
         key: "id",
       },
     },
@@ -38,6 +40,10 @@ OrderDetail.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 1,
+    },
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false
     },
   },
   {
@@ -50,7 +56,7 @@ OrderDetail.init(
 OrderDetail.belongsTo(Order, { foreignKey: "orderId" });
 Order.hasMany(OrderDetail, { foreignKey: "orderId" });
 
-OrderDetail.belongsTo(Product, { foreignKey: "productId" });
-Product.hasMany(OrderDetail, { foreignKey: "productId" });
+OrderDetail.belongsTo(ProductVariant, { foreignKey: "productVariantId" });
+ProductVariant.hasMany(OrderDetail, { foreignKey: "productVariantId" });
 
 export default OrderDetail;
