@@ -9,6 +9,7 @@ import { productStatus } from "../db/models/Products";
 import { productVariantColors, productVariantSizes } from "../db/models/ProductVariant";
 import { ProductVariantController } from "../controller/ProductVariantController";
 import { variantExists } from "../middleware/productVariant";
+import { productImageExists } from "../middleware/productimage";
 
 const router = Router()
 
@@ -164,6 +165,41 @@ router.delete('/variant/:variantId',
     handleInputErrors,
     variantExists,
     ProductVariantController.removeVariant
+)
+
+//** IMAGES */
+
+router.post('/variant/:variantId/image',
+    param('variantId').isInt().withMessage("id not valid"),
+    body('is_main').isBoolean(),
+    body('position').isInt(),
+    handleInputErrors,
+    variantExists,
+    ProductVariantController.uploadImage,
+    ProductVariantController.createProductImage
+)
+
+router.put('/variant/image/:productImageId',
+    param('productImageId').isInt().withMessage("id not valid"),
+    handleInputErrors,
+    productImageExists,
+    ProductVariantController.uploadImage,
+    ProductVariantController.updateProductImage
+)
+
+router.patch('/variant/image/:productImageId/is_main',
+    param('productImageId').isInt().withMessage("id not valid"),
+    handleInputErrors,
+    productImageExists,
+    ProductVariantController.updateProductImage
+)
+
+router.patch('/variant/image/:productImageId/position',
+    param('productImageId').isInt().withMessage("id not valid"),
+    body('position').isInt(),
+    handleInputErrors,
+    productImageExists,
+    ProductVariantController.updateProductImage
 )
 
 export default router
