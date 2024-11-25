@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express'
+import path from 'path'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import morgan from 'morgan'
@@ -22,9 +23,8 @@ export async function connectDB() {
     }
 }
 connectDB()
-
 const app = express()
-
+app.use(express.static(path.join(__dirname, '/uploads')));
 app.use(cors(corsConfig))
 app.use(morgan('dev'))
 app.use(express.json())

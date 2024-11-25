@@ -3,6 +3,7 @@ import { respError, respOk } from "../utils/responses"
 import Product from "../db/models/Products"
 import ProductVariant from "../db/models/ProductVariant"
 import ProductImage from "../db/models/ProductImage"
+import Category from "../db/models/Categories"
 
 export class ProductController {
     static createProduct = async (req: Request, res: Response, next: NextFunction) => {
@@ -39,7 +40,21 @@ export class ProductController {
 
     static getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const products = await Product.findAll()
+            const products = await Product.findAll({
+                include: [
+                    {
+                        model: ProductVariant,
+                        include: [{
+                            model: ProductImage,
+                            where: { is_main: true },
+                            required: true 
+                        }]
+                    },
+                    {
+                        model: Category
+                    }
+                ]
+            });            
             res.json(respOk(products))
         } catch (error) {
             next(error)
