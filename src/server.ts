@@ -3,7 +3,7 @@ import path from 'path'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import morgan from 'morgan'
-import { corsConfig } from './config/cors'
+// import { corsConfig } from './config/cors'
 import db from "./db/models/index"
 import colors from 'colors'
 import { respError } from './utils/responses'
@@ -25,7 +25,7 @@ export async function connectDB() {
 connectDB()
 const app = express()
 app.use(express.static(path.join(__dirname, '/uploads')));
-app.use(cors(corsConfig))
+app.use(cors())
 app.use(morgan('dev'))
 app.use(express.json())
 app.use('/api/product', productRoutes)

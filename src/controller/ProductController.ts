@@ -21,9 +21,13 @@ export class ProductController {
         try {
             const product = await Product.findByPk(productId, {
                 include: [{
-                    model: ProductVariant,
-                    include: [{ model: ProductImage }]
-                }]
+                        model: ProductVariant,
+                        include: [{ model: ProductImage }]
+                    },
+                    {
+                        model: Category
+                    }
+                ]
             })
         
             if(!product) {
