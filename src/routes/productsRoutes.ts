@@ -49,8 +49,8 @@ router.post('/',
             }
             return true;
         }),
-    body("categoryId").notEmpty().withMessage("name is required").isInt(),
-    handleInputErrors, 
+    body("categoryId").notEmpty().withMessage("categoryId is required").isInt({min: 1}).withMessage("invalid category"),
+    handleInputErrors,
     ProductController.createProduct
 )
 
@@ -126,7 +126,6 @@ router.post('/productId/:productId/variant',
 router.get('/variant/:variantId', 
     param('variantId').isInt().withMessage("id not valid"),
     handleInputErrors,
-    variantExists,
     ProductVariantController.getVariantById
 )
 
@@ -171,8 +170,8 @@ router.delete('/variant/:variantId',
 
 router.post('/variant/:variantId/image',
     param('variantId').isInt().withMessage("id not valid"),
-    body('is_main').isBoolean(),
-    body('position').isInt(),
+    // body('is_main').isBoolean(),
+    // body('position').isInt(),
     handleInputErrors,
     variantExists,
     ProductVariantController.uploadImage,

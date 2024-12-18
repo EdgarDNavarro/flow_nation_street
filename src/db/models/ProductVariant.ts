@@ -19,6 +19,7 @@ export const productVariantSizes = {
   L: "L",
   XL: "XL",
   XXL: "XXL",
+  U: "U"
 } as const;
 export type ProductVariantSize = typeof productVariantSizes[keyof typeof productVariantSizes];
 

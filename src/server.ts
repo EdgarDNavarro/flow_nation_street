@@ -39,8 +39,8 @@ app.use((err: Error, _req: Request, res: Response, next: NextFunction): void => 
     }
 
     if (err.name === 'SequelizeForeignKeyConstraintError') {
-        res.status(400).json(respError({
-            msg: 'Foreign key constraint failed.',
+        res.status(409).json(respError({
+            message: 'Foreign key constraint failed.',
             details: err.message,
         }));
         return

@@ -44,15 +44,32 @@ export class ProductVariantController {
                 return
             }
 
-            await ProductVariant.create({color, price, size, discount, stock, productId, sku})
-            res.status(201).send("Product variant created successfully")
+            const variant = await ProductVariant.create({color, price, size, discount, stock, productId, sku})
+            res.status(201).json(respOk({message: "Product variant created successfully", id: variant.id}))
         } catch (error) {
             next(error)
         }
     }
 
     static getVariantById = async (req: Request, res: Response, next: NextFunction) => {
-        res.json(respOk(req.productVariant))
+        const { variantId } = req.params
+
+        try {
+            const variant = await ProductVariant.findByPk(variantId,{
+                include: [{
+                    model: ProductImage
+                }]
+            })
+        
+            if(!variant) {
+                const error = new Error("Variant not found")
+                res.status(404).json(respError({message: error.message}))
+                return
+            }
+            res.json(respOk(variant))
+        } catch (error) {
+            next(error)
+        }
     }
 
     static updateVariante = async (req: Request, res: Response, next: NextFunction) => {
@@ -106,7 +123,7 @@ export class ProductVariantController {
     };
 
     static createProductImage = async (req: Request, res: Response, next: NextFunction) => {
-        const { is_main, position } = req.body
+        const { is_main = true, position = 1 } = req.body
         const file = req.file
         const { variantId } = req.params
         if (!file) {
