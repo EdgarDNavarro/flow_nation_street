@@ -8,7 +8,7 @@ import ProductVariant from "../db/models/ProductVariant"
 import ProductImage from "../db/models/ProductImage"
 
 const multerConfig = {
-    limits : { fileSize : 5000000},
+    limits : { fileSize : 2000000},
     storage: multer.diskStorage({
         destination: (_req, _file, cb) => {
             cb(null, __dirname+'../../uploads')
@@ -123,7 +123,16 @@ export class ProductVariantController {
     };
 
     static createProductImage = async (req: Request, res: Response, next: NextFunction) => {
-        const { is_main = true, position = 1 } = req.body
+        if (req.body.is_main !== undefined) {
+            req.body.is_main = req.body.is_main === 'true';
+        }
+    
+        if (req.body.position !== undefined) {
+            req.body.position = Number(req.body.position);
+        }
+
+        const { is_main = false, position = 1 } = req.body
+
         const file = req.file
         const { variantId } = req.params
         if (!file) {

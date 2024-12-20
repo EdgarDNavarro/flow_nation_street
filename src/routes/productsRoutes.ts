@@ -170,8 +170,6 @@ router.delete('/variant/:variantId',
 
 router.post('/variant/:variantId/image',
     param('variantId').isInt().withMessage("id not valid"),
-    // body('is_main').isBoolean(),
-    // body('position').isInt(),
     handleInputErrors,
     variantExists,
     ProductVariantController.uploadImage,
@@ -190,7 +188,7 @@ router.patch('/variant/image/:productImageId/is_main',
     param('productImageId').isInt().withMessage("id not valid"),
     handleInputErrors,
     productImageExists,
-    ProductVariantController.updateProductImage
+    ProductVariantController.updateProductImageIsMain
 )
 
 router.patch('/variant/image/:productImageId/position',
